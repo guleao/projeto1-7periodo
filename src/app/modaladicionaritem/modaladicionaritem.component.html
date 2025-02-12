@@ -1,0 +1,26 @@
+<div class="modal fade" id="adicionarItemModal" tabindex="-1" aria-labelledby="adicionarItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="adicionarItemModalLabel">Adicionar Item</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label for="itemNome" class="form-label">Nome do Item</label>
+              <input type="text" class="form-control" id="itemNome">
+            </div>
+            <div class="mb-3">
+              <label for="itemQuantidade" class="form-label">Quantidade</label>
+              <input type="text" class="form-control" id="itemQuantidade" >
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="adicionarItem()">Adicionar</button>
+        </div>
+      </div>
+    </div>
+  </div>
