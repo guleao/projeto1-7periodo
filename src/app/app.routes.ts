@@ -1,6 +1,10 @@
 import { Routes } from '@angular/router';
-import { ListadecomprasComponent } from './listadecompras/listadecompras.component';
+import { ListadecomprasComponent } from './components/listadecompras/listadecompras.component';
+import { LoginComponent } from './components/login/login.component';
+import { CadastroComponent } from './components/cadastro/cadastro.component';
 
 export const routes: Routes = [
-    { path: 'lista_de_compras', component: ListadecomprasComponent },
+    { path: '', component: LoginComponent },
+    { path: 'cadastro', component: CadastroComponent },
+    { path: 'listagem', component: ListadecomprasComponent },
 ];
