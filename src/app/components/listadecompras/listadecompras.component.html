@@ -1,7 +1,7 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col">
-            <h1 class="text-center text-bg-dark">Lista de Compras</h1>
+            <h1 class="text-center ">Lista de Compras</h1>
         </div>
     </div>
     <div class="row">
@@ -14,28 +14,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Maçã</td>
-                        <td>2 kg</td>
-                    </tr>
-                    <tr>
-                        <td>Pão</td>
-                        <td>1 pacote</td>
-                    </tr>
-                    <tr>
-                        <td>Leite</td>
-                        <td>3 litros</td>
+                    <tr *ngFor="let item of items">
+                        <td>{{ item.nome }}</td>
+                        <td>{{ item.quantidade }}</td>
                     </tr>
                 </tbody>
             </table>
             <div class="d-flex justify-content-center gap-2">
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#adicionarItemModal" onclick="console.log('Botão Adicionar item clicado')">Adicionar item</button>
-                <button class="btn btn-danger">Resetar lista</button>
+                <button class="btn btn-success" [routerLink]="['/adicionar-item']">Adicionar item</button>
+                <button class="btn btn-danger" (click)="resetarLista()">Resetar lista</button>
             </div>
         </div>
     </div>
 </div>
-
-<ng-template>
-    
-</ng-template>
