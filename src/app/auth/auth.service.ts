@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from 'express';
 import { User } from '../models/user/user';
 import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../enviroments/enviroment.dev';
 
 @Injectable({
   providedIn: 'root'
@@ -9,20 +11,21 @@ import { Observable, of } from 'rxjs';
 
 export class AuthService {
 
+  http = inject(HttpClient);
+  APIAuth = environment.SERVIDOR + "/auth";
+  APIUser = environment.SERVIDOR + "/users";
+
   constructor() { }
 
   login(user: User): Observable<User | null> {
-    let foundUser: User | null = null;
-  
-    if (user.email === 'admin@email.com' && user.password === '123') {
-      foundUser = new User(1, "User", "admin@email.com", null, null);
-    }
-  
-    return of(foundUser);
+    return this.http.post<User | null>(`${this.APIAuth}/login`, user, {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
-  register(obj: User): Observable<string> {
-    //return this.http.post<string>(this.API+"/save", obj, {responseType: 'text' as 'json'} );
-    return of("Cadastro realizado com sucesso!");
+  register(user: User): Observable<User> {
+    return this.http.post<User>(`${this.APIUser}/register`, user, {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 }

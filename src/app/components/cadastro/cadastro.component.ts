@@ -58,7 +58,7 @@ export class CadastroComponent {
     this.authService.register(user).subscribe({
       next: (msg) => {
         Swal.fire({
-          title: msg,
+          title: "Cadastro efetuado com sucesso!",
           icon: 'success',
           confirmButtonText: 'Ok',
         }).then(() => {
