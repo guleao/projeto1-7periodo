@@ -1,18 +1,19 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
   <div class="card shadow-sm p-4" style="width: 400px">
     <h2 class="text-center mb-4">Cadastro</h2>
-    <form (ngSubmit)="register()">
+    <form [formGroup]="cadastroForm" (ngSubmit)="register()">
       <div class="mb-3">
         <label for="name" class="form-label">Nome</label>
         <input
           type="text"
           id="name"
-          name="name"
           class="form-control"
           placeholder="Digite seu nome"
-          [(ngModel)]="user.username"
-          required
+          formControlName="username"
         />
+        <small class="text-danger" *ngIf="cadastroForm.get('username')?.invalid && cadastroForm.get('username')?.touched">
+          Nome deve ter pelo menos 3 caracteres
+        </small>
       </div>
 
       <div class="mb-3">
@@ -20,12 +21,13 @@
         <input
           type="email"
           id="email"
-          name="email"
           class="form-control"
           placeholder="Digite seu e-mail"
-          [(ngModel)]="user.email"
-          required
+          formControlName="email"
         />
+        <small class="text-danger" *ngIf="cadastroForm.get('email')?.invalid && cadastroForm.get('email')?.touched">
+          E-mail inválido
+        </small>
       </div>
 
       <div class="mb-3">
@@ -33,12 +35,13 @@
         <input
           type="email"
           id="confirmEmail"
-          name="confirmEmail"
           class="form-control"
           placeholder="Confirme seu e-mail"
-          [(ngModel)]="user.confirmEmail"
-          required
+          formControlName="confirmEmail"
         />
+        <small class="text-danger" *ngIf="cadastroForm.hasError('notMatching', ['confirmEmail'])">
+          Os e-mails não coincidem
+        </small>
       </div>
 
       <div class="mb-3">
@@ -46,39 +49,36 @@
         <input
           type="password"
           id="password"
-          name="password"
           class="form-control"
           placeholder="Digite sua senha"
-          [(ngModel)]="user.password"
-          required
+          formControlName="password"
         />
+        <small class="text-danger" *ngIf="cadastroForm.get('password')?.invalid && cadastroForm.get('password')?.touched">
+          Senha deve ter pelo menos 6 caracteres
+        </small>
       </div>
 
       <div class="mb-3">
-        <label for="confirmPassword" class="form-label"
-          >Confirme sua Senha</label
-        >
+        <label for="confirmPassword" class="form-label">Confirme sua Senha</label>
         <input
           type="password"
           id="confirmPassword"
-          name="confirmPassword"
           class="form-control"
           placeholder="Confirme sua senha"
-          [(ngModel)]="user.confirmPassword"
-          required
+          formControlName="confirmPassword"
         />
+        <small class="text-danger" *ngIf="cadastroForm.hasError('notMatching', ['confirmPassword'])">
+          As senhas não coincidem
+        </small>
       </div>
 
-      <button type="submit" class="mt-3 btn btn-primary w-100">
+      <button type="submit" class="mt-3 btn btn-primary w-100" [disabled]="cadastroForm.invalid">
         Cadastrar
       </button>
     </form>
 
     <div class="text-center mt-3">
-      <small
-        >Já tem uma conta?
-        <a href="/" class="text-decoration-none">Faça login</a></small
-      >
+      <small>Já tem uma conta? <a href="/" class="text-decoration-none">Faça login</a></small>
     </div>
   </div>
 </div>

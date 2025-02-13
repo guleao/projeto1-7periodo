@@ -1,35 +1,68 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import Swal from 'sweetalert2';
-import { User } from '../../models/user/user';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cadastro',
-  imports: [FormsModule, CommonModule],
   templateUrl: './cadastro.component.html',
+  imports: [CommonModule, ReactiveFormsModule],
   styleUrl: './cadastro.component.css',
 })
 export class CadastroComponent {
-  user = new User(0, '', '', null, null);
-  
+  cadastroForm: FormGroup;
+
   constructor(
+    private fb: FormBuilder,
     private router: Router,
     private authService: AuthService
   ) {
+    this.cadastroForm = this.fb.group(
+      {
+        username: ['', [Validators.required, Validators.minLength(3)]],
+        email: ['', [Validators.required, Validators.email]],
+        confirmEmail: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required]],
+      },
+      { validators: [this.matchFields('email', 'confirmEmail'), this.matchFields('password', 'confirmPassword')] }
+    );
+  }
+
+  // Validador para verificar se dois campos são iguais
+  matchFields(field1: string, field2: string) {
+    return (group: AbstractControl): ValidationErrors | null => {
+      const value1 = group.get(field1)?.value;
+      const value2 = group.get(field2)?.value;
+      if (value1 !== value2) {
+        group.get(field2)?.setErrors({ notMatching: true });
+        return { notMatching: true };
+      }
+      return null;
+    };
   }
 
   register() {
-    this.authService.register(this.user).subscribe({
+    if (this.cadastroForm.invalid) {
+      Swal.fire({
+        title: 'Por favor, corrija os erros no formulário!',
+        icon: 'warning',
+        confirmButtonText: 'Ok',
+      });
+      return;
+    }
+
+    const user = this.cadastroForm.value;
+    this.authService.register(user).subscribe({
       next: (msg) => {
         Swal.fire({
           title: msg,
           icon: 'success',
           confirmButtonText: 'Ok',
         }).then(() => {
-          this.router.navigate(['/listagem'], { state: { user: this.user } });
+          this.router.navigate(['/listagem'], { state: { user } });
         });
       },
       error: (erro) => {
