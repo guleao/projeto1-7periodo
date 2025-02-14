@@ -1,14 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
-import { User } from '../../models/user/user';
 import { ProdutosService } from '../../services/produtos.service';
-
-interface Item {
-  id?: string;
-  productName: string;
-  productObservation: string;
-}
+import { Item } from '../../models/item/item';
 
 @Component({
   selector: 'app-listadecompras',
@@ -20,9 +14,7 @@ interface Item {
   templateUrl: './listadecompras.component.html',
   styleUrls: ['./listadecompras.component.css']
 })
-export class ListadecomprasComponent {
-  user = new User(0, "", "", null, null);
-
+export class ListadecomprasComponent implements OnInit {
   items: Item[] = [];
 
   constructor(private router: Router, private meuService: ProdutosService) {}
@@ -42,7 +34,29 @@ export class ListadecomprasComponent {
     );
   }
 
-  resetarLista() {
-    this.items = [];
+  resetarLista(): void {
+    this.meuService.deletarTodosItens().subscribe(
+      () => {
+        this.items = [];
+      },
+      (error) => {
+        console.error('Erro ao resetar lista', error);
+      }
+    );
+  }
+
+  editarItem(item: Item): void {
+    this.router.navigate(['/editar-item', item.id]);
+  }
+
+  removerItem(id: string): void {
+    this.meuService.deletarItem(id).subscribe(
+      () => {
+        this.items = this.items.filter(item => item.id !== id);
+      },
+      (error) => {
+        console.error('Erro ao remover item', error);
+      }
+    );
   }
 }
