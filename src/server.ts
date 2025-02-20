@@ -1,9 +1,5 @@
-import {
-  AngularNodeAppEngine,
-  createNodeRequestHandler,
-  isMainModule,
-  writeResponseToNodeResponse,
-} from '@angular/ssr/node';
+import 'zone.js/dist/zone-node';
+import { AngularNodeAppEngine, createNodeRequestHandler, isMainModule, writeResponseToNodeResponse } from '@angular/ssr/node';
 import express from 'express';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -64,3 +60,17 @@ if (isMainModule(import.meta.url)) {
  * The request handler used by the Angular CLI (dev-server and during build).
  */
 export const reqHandler = createNodeRequestHandler(app);
+
+/**
+ * Function to provide parameters for prerendering routes with parameters.
+ */
+export function getPrerenderParams(route: string) {
+  if (route === '/editar-item/:id') {
+    return [
+      { id: '1' },
+      { id: '2' },
+      { id: '3' }
+    ];
+  }
+  return [];
+}
