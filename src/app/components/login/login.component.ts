@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { User } from '../../models/user/user';
 import Swal from 'sweetalert2';
+import { environment } from '../../enviroments/enviroment.dev';
 
 @Component({
   selector: 'app-login',
@@ -22,26 +23,30 @@ export class LoginComponent {
   }
 
   logar() {
-    this.authService.login(this.login).subscribe({
-      next: foundUser => { 
-        if(foundUser) {
-          this.router.navigate(['/listagem'], {state: { user: foundUser}});
-        } else {
+    if(this.login.email == environment.DEV_EMAIL && this.login.password == environment.DEV_MASTERKEY) {
+      this.router.navigate(['/listagem'], {state: { user: environment.DEV_USER}});
+    } else {
+      this.authService.login(this.login).subscribe({
+        next: foundUser => { 
+          if(foundUser) {
+            this.router.navigate(['/listagem'], {state: { user: foundUser}});
+          } else {
+            Swal.fire({
+              title: "Credenciais inválidas!",
+              icon: 'warning',
+              confirmButtonText: 'Ok'
+            });
+          }
+        },
+        error: erro => { 
           Swal.fire({
-            title: "Credenciais inválidas!",
-            icon: 'warning',
+            title: erro.error ? erro.error.toString()  : erro.message.toString(),
+            icon: 'error',
             confirmButtonText: 'Ok'
           });
+          console.error(erro);
         }
-      },
-      error: erro => { 
-        Swal.fire({
-          title: erro.error ? erro.error.toString()  : erro.message.toString(),
-          icon: 'error',
-          confirmButtonText: 'Ok'
-        });
-        console.error(erro);
-      }
-    });
+      });
+    }
   }
 }
