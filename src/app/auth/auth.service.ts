@@ -18,9 +18,11 @@ export class AuthService {
   constructor() { }
 
   login(user: User): Observable<User | null> {
-    return this.http.post<User | null>(`${this.APIAuth}/login`, user, {
+    let foundUser = this.http.post<User | null>(`${this.APIAuth}/login`, user, {
       headers: { 'Content-Type': 'application/json' }
     });
+    
+    return foundUser
   }
 
   register(user: User): Observable<User> {

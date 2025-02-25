@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  NgxPayPalModule,
-  IPayPalConfig,
-  ICreateOrderRequest,
-} from 'ngx-paypal';
+import { Component, OnInit, inject } from '@angular/core';
+import { NgxPayPalModule, IPayPalConfig } from 'ngx-paypal';
+import { PaypalService } from '../../services/paypal/paypal.service';
+
 @Component({
   selector: 'app-checkout',
   imports: [NgxPayPalModule],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
 })
+
 export class CheckoutComponent implements OnInit {
+  paypalService = inject(PaypalService);
   public payPalConfig?: IPayPalConfig;
 
   ngOnInit(): void {
@@ -18,73 +18,6 @@ export class CheckoutComponent implements OnInit {
   }
 
   private initConfig(): void {
-    this.payPalConfig = {
-      currency: 'EUR',
-      clientId: 'sb',
-      createOrderOnClient: (data) =>
-        <ICreateOrderRequest>{
-          intent: 'CAPTURE',
-          purchase_units: [
-            {
-              amount: {
-                currency_code: 'EUR',
-                value: '9.99',
-                breakdown: {
-                  item_total: {
-                    currency_code: 'EUR',
-                    value: '9.99',
-                  },
-                },
-              },
-              items: [
-                {
-                  name: 'Enterprise Subscription',
-                  quantity: '1',
-                  category: 'DIGITAL_GOODS',
-                  unit_amount: {
-                    currency_code: 'EUR',
-                    value: '9.99',
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      advanced: {
-        commit: 'true',
-      },
-      style: {
-        label: 'paypal',
-        layout: 'vertical',
-      },
-      onApprove: (data, actions) => {
-        console.log(
-          'onApprove - transaction was approved, but not authorized',
-          data,
-          actions
-        );
-        actions.order.get().then((details: any) => {
-          console.log(
-            'onApprove - you can get full order details inside onApprove: ',
-            details
-          );
-        });
-      },
-      onClientAuthorization: (data) => {
-        console.log(
-          'onClientAuthorization - you should probably inform your server about completed transaction at this point',
-          data
-        );
-      },
-      onCancel: (data, actions) => {
-        console.log('OnCancel', data, actions);
-      },
-      onError: (err) => {
-        console.log('OnError', err);
-      },
-      onClick: (data, actions) => {
-        console.log('onClick', data, actions);
-      },
-    };
+    this.payPalConfig = this.paypalService.initConfig();
   }
 }
